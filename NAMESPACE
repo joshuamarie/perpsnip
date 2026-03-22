@@ -2,6 +2,7 @@
 
 S3method(print,perpsnip)
 S3method(update,perpsnip)
-export(perpetual_class)
 export(perpsnip)
+export(perpsnip_fit_class)
+export(perpsnip_prob_convert)
 importFrom(stats,update)

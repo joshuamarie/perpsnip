@@ -6,14 +6,10 @@ register_perpsnip = function() {
     model_env = parsnip::get_model_env()
 
     if ("perpsnip" %in% model_env$models) {
-        if (interactive() || identical(Sys.getenv("DEVTOOLS_LOAD"), "true")) {
-            if (exists("perpsnip", envir = model_env)) {
-                rm(list = "perpsnip", envir = model_env)
-            }
-            model_env$models = setdiff(model_env$models, "perpsnip")
-        } else {
-            return(invisible(TRUE))
+        if (exists("perpsnip", envir = model_env)) {
+            rm(list = "perpsnip", envir = model_env)
         }
+        model_env$models = setdiff(model_env$models, "perpsnip")
     }
 
     parsnip::set_new_model("perpsnip")
@@ -33,7 +29,7 @@ register_perpsnip = function() {
         value = list(
             interface = "matrix",
             protect = c("x", "y"),
-            func = c(pkg = "perpsnip", fun = "perpetual_class"),
+            func = c(pkg = "perpsnip", fun = "perpsnip_fit_class"),
             defaults = list(objective = "LogLoss")
         )
     )
@@ -74,7 +70,7 @@ register_perpsnip = function() {
         type = "prob",
         value = list(
             pre = NULL,
-            post = perpetual_prob_convert,
+            post = perpsnip_prob_convert,
             func = c(fun = "predict"),
             args = list(
                 object = rlang::expr(object$fit),
