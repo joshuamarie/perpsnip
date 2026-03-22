@@ -1,0 +1,46 @@
+Package: perpsnip
+Type: Package
+Title: 'tidymodels' Interface for 'PerpetualBooster'
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Joshua", "Marie",
+      email = "joshua.marie.k@gmail.com",
+      role = c("aut", "cre")
+    )
+  )
+Description: Provides a 'parsnip' model specification for the 'PerpetualBooster'
+    algorithm implemented in the 'perpetual' package. PerpetualBooster is a
+    self-generalizing gradient boosting machine that eliminates the need for
+    hyperparameter search by automatically tuning itself within a user-supplied
+    computational budget. This package exposes classification, regression, and
+    (optionally) censored regression modes so that PerpetualBooster can be used
+    inside any 'tidymodels' workflow, including hyperparameter tuning with
+    'tune' and performance evaluation with 'yardstick'.
+License: Apache License (>= 2)
+Encoding: UTF-8
+LazyData: true
+Imports:
+    rlang,
+    parsnip (>= 1.0.0),
+    tibble (>= 3.0.0),
+    perpetual
+Suggests:
+    censored (>= 0.3.0),
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    dplyr,
+    tune,
+    yardstick,
+    jsonlite,
+    workflows
+Remotes:
+    perpetual-ml/perpetual/package-r
+Additional_repositories: https://perpetual-ml.r-universe.dev
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+URL: https://github.com/joshuamarie/perpsnip
+BugReports: https://github.com/joshuamarie/perpsnip/issues
+VignetteBuilder: knitr
