@@ -78,7 +78,7 @@ test_that("perpsnip() fits and predicts class for binary classification", {
 })
 
 test_that("perpsnip() fits and predicts prob for binary classification", {
-    wf = workflows::workflow() |>
+     wf = workflows::workflow() |>
         workflows::add_formula(am ~ mpg + cyl + disp + hp + wt) |>
         workflows::add_model(perpsnip(mode = "classification", budget = 0.5)) |>
         generics::fit(data = cls_data)
