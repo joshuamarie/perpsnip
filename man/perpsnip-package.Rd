@@ -20,4 +20,4 @@ Useful links:
 \strong{Maintainer}: Joshua Marie \email{joshua.marie.k@gmail.com}
 
 }
-\keyword{package}
+\keyword{internal}
