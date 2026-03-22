@@ -36,11 +36,18 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           use-public-rspm: true
-          # Needed for Rust-backed packages (perpetual uses extendr)
-          extra-repositories: https://perpetual-ml.r-universe.dev
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install perpetual from R-universe binary
+        run: |
+          install.packages(
+            "perpetual",
+            repos = c(
+              "https://perpetual-ml.r-universe.dev",
+              "https://cloud.r-project.org"
+            ),
+            type = "binary"
+          )
+        shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
