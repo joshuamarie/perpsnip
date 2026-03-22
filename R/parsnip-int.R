@@ -58,19 +58,28 @@
 #'   in the model object. Required for certain calibration methods and
 #'   importance types.
 #'
-#' @return A \code{model_spec} object of class \code{perpsnip}.
+#' @return A `model_spec` object of class `"perpsnip"`.
 #'
 #' @examples
 #' \dontrun{
 #' library(perpsnip)
 #' library(workflows)
 #'
+#' # Binary classification
 #' spec = perpsnip(mode = "classification", budget = 0.5)
 #'
 #' wf = workflow() |>
-#'   add_formula(am ~ .) |>
-#'   add_model(spec) |>
-#'   fit(data = dplyr::mutate(mtcars, am = as.factor(am)))
+#'     add_formula(am ~ .) |>
+#'     add_model(spec) |>
+#'     fit(data = dplyr::mutate(mtcars, am = as.factor(am)))
+#'
+#' # Regression
+#' reg_spec = perpsnip(mode = "regression", budget = 1.0, seed = 42)
+#'
+#' reg_wf = workflow() |>
+#'     add_formula(mpg ~ .) |>
+#'     add_model(reg_spec) |>
+#'     fit(data = mtcars)
 #' }
 #'
 #' @export
@@ -200,29 +209,57 @@ update.perpsnip = function(
     )
 }
 
+#' Fit wrapper for classification in 'tidymodels'
+#'
+#' This function is for preparation purposes only. It mainly reserves for handling the categorical data `y`
+#' to 0-based integers, fits a `PerpetualBooster`, and stores the original class labels as an attribute so
+#' that `predict()` can reconstruct factor output.
+#'
+#' @param x A numeric matrix of predictors.
+#' @param y A factor response variable.
+#' @param objective Loss function passed to [perpetual::perpetual()].
+#'   Defaults to `"LogLoss"`.
+#' @param ... Additional arguments forwarded to [perpetual::perpetual()].
+#'
+#' @return A fitted `PerpetualBooster` object with a `"classes"` attribute.
+#'
 #' @keywords internal
-#' @noRd
 #' @export
-perpetual_class = function(x, y, objective = "LogLoss", ...) {
-    if (!is.factor(y) ) {
+perpsnip_fit_class = function(x, y, objective = "LogLoss", ...) {
+    if (!is.factor(y)) {
         stop("`y` must be a factor for classification.", call. = FALSE)
     }
 
-    lvls = levels(y)
-    y_num = as.integer(y) - 1L
+    x = matrix(as.double(x), nrow = nrow(x), ncol = ncol(x), dimnames = dimnames(x))
 
-    model = perpetual::perpetual(x = x, y = y_num, objective = objective, ...)
+    lvls = levels(y)
+
+    y_dbl = as.double(as.integer(y) - 1L)
+
+    model = perpetual::perpetual(x = x, y = y_dbl, objective = objective, ...)
 
     attr(model, "classes") = lvls
     model
 }
 
+#' Post-processing helper: convert raw numeric predictions to a probability tibble
+#'
+#' Used as the `post` function in `parsnip::set_pred()` for the `"prob"` type.
+#' Handles both binary (single numeric vector) and multiclass (matrix) output
+#' from `predict.PerpetualBooster(..., type = "prob")`.
+#'
+#' @param out Raw output from `predict.PerpetualBooster()`.
+#' @param object The parsnip model object (used to retrieve class labels).
+#'
+#' @return A [tibble::tibble()] with one column per class, named after the
+#'   original factor levels.
+#'
 #' @keywords internal
-#' @noRd
-perpetual_prob_convert = function(out, object) {
+#' @export
+perpsnip_prob_convert = function(out, object) {
     classes = as.character(attr(object$fit, "classes"))
 
-    if (is.null(classes) || length(classes) == 0) {
+    if (is.null(classes) || length(classes) == 0L) {
         classes = c("0", "1")
     }
 
