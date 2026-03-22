@@ -102,7 +102,7 @@ in the model object. Required for certain calibration methods and
 importance types.}
 }
 \value{
-A \code{model_spec} object of class \code{perpsnip}.
+A \code{model_spec} object of class \code{"perpsnip"}.
 }
 \description{
 A parsnip-compatible model specification for the PerpetualBooster algorithm.
@@ -116,12 +116,21 @@ censored regression modes.
 library(perpsnip)
 library(workflows)
 
+# Binary classification
 spec = perpsnip(mode = "classification", budget = 0.5)
 
 wf = workflow() |>
-  add_formula(am ~ .) |>
-  add_model(spec) |>
-  fit(data = dplyr::mutate(mtcars, am = as.factor(am)))
+    add_formula(am ~ .) |>
+    add_model(spec) |>
+    fit(data = dplyr::mutate(mtcars, am = as.factor(am)))
+
+# Regression
+reg_spec = perpsnip(mode = "regression", budget = 1.0, seed = 42)
+
+reg_wf = workflow() |>
+    add_formula(mpg ~ .) |>
+    add_model(reg_spec) |>
+    fit(data = mtcars)
 }
 
 }
