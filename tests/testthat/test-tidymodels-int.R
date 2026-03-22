@@ -68,7 +68,7 @@ test_that("perpsnip() fits and predicts class for binary classification", {
     wf = workflows::workflow() |>
         workflows::add_formula(am ~ mpg + cyl + disp + hp + wt) |>
         workflows::add_model(perpsnip(mode = "classification", budget = 0.5)) |>
-        generics::fit(data = cls_data)
+        parsnip::fit(data = cls_data)
 
     preds = predict(wf, new_data = cls_data)
 
@@ -81,7 +81,7 @@ test_that("perpsnip() fits and predicts prob for binary classification", {
      wf = workflows::workflow() |>
         workflows::add_formula(am ~ mpg + cyl + disp + hp + wt) |>
         workflows::add_model(perpsnip(mode = "classification", budget = 0.5)) |>
-        generics::fit(data = cls_data)
+        parsnip::fit(data = cls_data)
 
     preds = predict(wf, new_data = cls_data, type = "prob")
 
@@ -96,7 +96,7 @@ test_that("perpsnip() prob columns are named after factor levels", {
     wf = workflows::workflow() |>
         workflows::add_formula(am ~ mpg + cyl + disp + hp + wt) |>
         workflows::add_model(perpsnip(mode = "classification", budget = 0.5)) |>
-        generics::fit(data = cls_data)
+        parsnip::fit(data = cls_data)
 
     preds = predict(wf, new_data = cls_data, type = "prob")
 
@@ -107,7 +107,7 @@ test_that("perpsnip() fits and predicts for regression", {
     wf = workflows::workflow() |>
         workflows::add_formula(mpg ~ cyl + disp + hp + wt) |>
         workflows::add_model(perpsnip(mode = "regression", budget = 0.5)) |>
-        generics::fit(data = reg_data)
+        parsnip::fit(data = reg_data)
 
     preds = predict(wf, new_data = reg_data)
 
@@ -121,7 +121,7 @@ test_that("perpsnip() regression predictions are finite", {
     wf = workflows::workflow() |>
         workflows::add_formula(mpg ~ cyl + disp + hp + wt) |>
         workflows::add_model(perpsnip(mode = "regression", budget = 0.5)) |>
-        generics::fit(data = reg_data)
+        parsnip::fit(data = reg_data)
 
     preds = predict(wf, new_data = reg_data)
 
