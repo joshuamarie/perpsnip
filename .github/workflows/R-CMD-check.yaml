@@ -1,5 +1,6 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+
 on:
   push:
     branches: [main, master]
@@ -18,10 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest, r: "release" }
-          - { os: ubuntu-latest, r: "devel" }
           - { os: windows-latest, r: "release" }
-          - { os: macos-latest, r: "release" }
+          - { os: macos-latest,   r: "release" }
+          - { os: macos-latest,   r: "devel"   }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -37,13 +37,13 @@ jobs:
           r-version: ${{ matrix.config.r }}
           use-public-rspm: true
 
-      - name: Install perpetual from R-universe binary
+      - name: Install perpetual binary from R-universe
         run: |
           install.packages(
             "perpetual",
             repos = c(
-              "https://perpetual-ml.r-universe.dev",
-              "https://cloud.r-project.org"
+              perpetual = "https://perpetual-ml.r-universe.dev",
+              CRAN = "https://cloud.r-project.org"
             ),
             type = "binary"
           )
