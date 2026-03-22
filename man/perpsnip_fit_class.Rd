@@ -2,7 +2,7 @@
 % Please edit documentation in R/parsnip-int.R
 \name{perpsnip_fit_class}
 \alias{perpsnip_fit_class}
-\title{Fit wrapper for classification}
+\title{Fit wrapper for classification in 'tidymodels'}
 \usage{
 perpsnip_fit_class(x, y, objective = "LogLoss", ...)
 }
@@ -20,8 +20,8 @@ Defaults to \code{"LogLoss"}.}
 A fitted \code{PerpetualBooster} object with a \code{"classes"} attribute.
 }
 \description{
-Converts a factor \code{y} to 0-based integers, fits a \code{PerpetualBooster}, and
-stores the original class labels as an attribute so that \code{predict()} can
-reconstruct factor output.
+This function is for preparation purposes only. It mainly reserves for handling the categorical data \code{y}
+to 0-based integers, fits a \code{PerpetualBooster}, and stores the original class labels as an attribute so
+that \code{predict()} can reconstruct factor output.
 }
 \keyword{internal}
